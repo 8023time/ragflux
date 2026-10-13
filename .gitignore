@@ -1,0 +1,36 @@
+# environment files
+.env
+
+# Node.js dependencies
+node_modules/
+
+# output
+dist/
+.next/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# caches
+.turbo/
+
+# docker
+dockerStore/
+
+# Operating system and editor temporary files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+
+# AI assistant
+**/AGENTS.md
+**/CLAUDE.md
+
+docs

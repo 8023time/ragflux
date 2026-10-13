@@ -1,0 +1,167 @@
+// use prisma-8
+
+// 用户表 - 存储用户的基本信息
+model User {
+  id        Int               @id @default(autoincrement()) // 用户ID
+  email     String            @unique // 用户邮箱，唯一
+  nickname  String            @default("") // 用户昵称，默认空字符串
+  createdAt TimestamptzString @default(now()) @map("created_at")
+  updatedAt temporal.updatedAtString() @map("updated_at")
+
+  @@map("t_user")
+}
+
+// 知识库表 - 存储知识库的基本信息，包括名称、描述、分块策略等
+model Dataset {
+  id            Int               @id @default(autoincrement()) // 知识库ID
+  userId        Int               @map("user_id") // 所属用户ID
+  name          String // 知识库名称
+  description   String            @default("") // 知识库描述，默认空字符串
+  chunkStrategy String            @default("general") @map("chunk_strategy") // 分块策略，默认值为"general"
+  embedModel    String            @default("") @map("embed_model") // 向量模型，默认空字符串
+  embedModelId  Int?              @map("embed_model_id") // 向量模型ID，可为空
+  visionModel   String            @default("") @map("vision_model") // 视觉模型，默认空字符串
+  visionModelId Int               @default(0) @map("vision_model_id") // 视觉模型ID，默认值为0
+  createdAt     TimestamptzString @default(now()) @map("created_at")
+  updatedAt     temporal.updatedAtString() @map("updated_at")
+
+  @@index([userId])
+  @@index([embedModelId])
+  @@index([visionModelId])
+  @@map("t_dataset")
+}
+
+// 模型表 - 存储用户自定义的向量模型信息
+model EmbedModel {
+  id        Int               @id @default(autoincrement()) // 向量模型ID
+  userId    Int               @map("user_id") // 所属用户ID
+  name      String // 向量模型名称
+  modelId   String            @map("model_id") // 模型ID
+  apiUrl    String            @map("api_url") // 模型API地址
+  apiKey    String            @default("") @map("api_key") // 模型API密钥，默认空字符串
+  createdAt TimestamptzString @default(now()) @map("created_at")
+  updatedAt temporal.updatedAtString() @map("updated_at")
+
+  @@index([userId])
+  @@map("t_embed_model")
+}
+
+// 模型表 - 存储用户自定义的视觉模型信息
+model VisionModel {
+  id        Int               @id @default(autoincrement()) // 视觉模型ID
+  userId    Int               @map("user_id") // 所属用户ID
+  name      String // 视觉模型名称
+  modelId   String            @map("model_id") // 模型ID
+  apiUrl    String            @map("api_url") // 模型API地址
+  apiKey    String            @default("") @map("api_key") // 模型API密钥，默认空字符串
+  createdAt TimestamptzString @default(now()) @map("created_at")
+  updatedAt temporal.updatedAtString() @map("updated_at")
+
+  @@index([userId])
+  @@map("t_vision_model")
+}
+
+// 文档表 - 存储用户上传的文档信息
+model Document {
+  id            Int                @id @default(autoincrement()) // 文档ID
+  datasetId     Int                @map("dataset_id") // 所属知识库ID
+  name          String // 文档名称
+  r2Key         String             @default("") @map("r2_key") // 文档在R2存储中的Key，默认空字符串
+  fileHash      String             @default("") @map("file_hash") // 文档文件的哈希值，默认空字符串
+  sizeBytes     Int                @default(0) @map("size_bytes") // 文档大小（字节），默认值为0
+  status        String             @default("pending") // 文档处理状态，默认值为"pending"
+  progress      Int                @default(0) // 文档处理进度，默认值为0
+  parseError    String?            @map("parse_error") // 文档解析错误信息，可为空
+  parseVersion  Int                @default(1) @map("parse_version") // 文档解析版本，默认值为1
+  attemptCount  Int                @default(0) @map("attempt_count") // 文档处理尝试次数，默认值为0
+  lastError     String?            @map("last_error") // 文档处理最后一次错误信息，可为空
+  lastAttemptAt TimestamptzString? @map("last_attempt_at") // 文档处理最后一次尝试时间，可为空
+  enabled       Boolean            @default(true) // 文档是否启用，默认值为true
+  createdAt     TimestamptzString  @default(now()) @map("created_at")
+  updatedAt     temporal.updatedAtString() @map("updated_at")
+
+  @@index([datasetId])
+  @@map("t_document")
+}
+
+// Outbox表 - 存储待发布的消息，用于实现事件驱动架构
+model Outbox {
+  id              Int                @id @default(autoincrement()) // Outbox消息ID
+  topic           String // 消息主题
+  aggregateId     Int                @map("aggregate_id") // 聚合ID，用于标识消息所属的聚合实体
+  payload         Json // 消息负载，存储消息的具体内容
+  status          String             @default("pending") // 消息状态，默认值为"pending"
+  publishAttempts Int                @default(0) @map("publish_attempts") // 消息发布尝试次数，默认值为0
+  nextAttemptAt   TimestamptzString  @default(now()) @map("next_attempt_at") // 消息下一次尝试发布时间，默认值为当前时间
+  publishedAt     TimestamptzString? @map("published_at") // 消息实际发布时间，可为空
+  lastError       String?            @map("last_error") // 消息最后一次错误信息，可为空
+  createdAt       TimestamptzString  @default(now()) @map("created_at")
+  updatedAt       temporal.updatedAtString() @map("updated_at")
+
+  @@index([status, nextAttemptAt])
+  @@map("t_outbox")
+}
+
+// Chunk表 - 存储文档的分块信息，用于向量化和检索
+model Chunk {
+  id          String            @id // 分块ID，使用字符串类型
+  documentId  Int               @map("document_id") // 所属文档ID
+  datasetId   Int               @map("dataset_id") // 所属知识库ID
+  chunkIndex  Int               @default(0) @map("chunk_index") // 分块索引，默认值为0
+  content     String // 分块内容
+  tokenNum    Int               @default(0) @map("token_num") // 分块的Token数量，默认值为0
+  imageKey    String            @default("") @map("image_key") // 分块对应的图片Key，默认空字符串
+  elementType String            @default("text") @map("element_type") // 分块元素类型，默认值为"text"
+  pageNumber  Int               @default(0) @map("page_number") // 分块所在页码，默认值为0
+  bbox        Json // 分块的边界框信息，存储为JSON格式
+  parserName  String            @default("") @map("parser_name") // 分块解析器名称，默认空字符串
+  enabled     Boolean           @default(true) // 分块是否启用，默认值为true
+  embedding   Json?               @map("embedding") // Embedding向量，实际数据库类型为无固定维度的 pgvector
+  embeddingModel String?        @map("embedding_model") // 生成向量的模型标识
+  embeddingDimensions Int?      @map("embedding_dimensions") // 向量实际维度，不固定
+  createdAt   TimestamptzString @default(now()) @map("created_at")
+  updatedAt   temporal.updatedAtString() @map("updated_at")
+
+  @@index([documentId])
+  @@index([datasetId])
+  @@map("t_chunk")
+}
+
+// 会话表 - 存储用户的会话信息，用于管理用户与系统的交互
+model Session {
+  id        Int               @id @default(autoincrement()) // 会话ID
+  userId    Int               @map("user_id") // 所属用户ID
+  datasetId Int               @map("dataset_id") // 所属知识库ID
+  title     String            @default("") // 会话标题，默认空字符串
+  status    Int               @default(1) // 会话状态，默认值为1
+  createdAt TimestamptzString @default(now()) @map("created_at")
+  updatedAt temporal.updatedAtString() @map("updated_at")
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("t_session")
+}
+
+// 消息表 - 存储会话中的消息信息，用于记录用户与系统的对话内容
+model Message {
+  id        Int               @id @default(autoincrement()) // 消息ID
+  sessionId Int               @map("session_id") // 所属会话ID
+  role      String // 消息角色，表示消息的发送方（如用户、系统等）
+  content   String            @default("") // 消息内容，默认空字符串
+  createdAt TimestamptzString @default(now()) @map("created_at")
+
+  @@index([sessionId])
+  @@map("t_message")
+}
+
+// 消息引用表 - 存储消息与文档分块的引用关系，用于实现消息内容的来源追踪
+model MessageCitation {
+  messageId Int    @map("message_id") // 消息ID
+  position  Int // 引用位置，表示该引用在消息内容中的位置
+  chunkId   String @map("chunk_id") // 引用的文档分块ID
+  score     Float // 引用的相关性评分，表示该引用与消息内容的相关程度
+
+  @@id([messageId, position])
+  @@index([chunkId])
+  @@map("t_message_citation")
+}

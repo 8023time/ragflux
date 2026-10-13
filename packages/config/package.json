@@ -1,0 +1,19 @@
+{
+  "name": "@ragflux/config",
+  "version": "1.0.0",
+  "description": "ragflux - 全局配置管理",
+  "author": "8023time",
+  "scripts": {
+    "build": "tsup"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  }
+}

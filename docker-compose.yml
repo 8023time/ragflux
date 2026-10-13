@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg18
+    container_name: ragflux-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: 8023time
+      POSTGRES_PASSWORD: 123456abc
+      POSTGRES_DB: ragflux_db
+    volumes:
+      - ./dockerStore/postgres:/var/lib/postgresql
+      - ./dockerStore/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U 8023time -d ragflux_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  redis:
+    image: redis:8
+    container_name: ragflux-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass 123456abc --appendonly yes
+    volumes:
+      - ./dockerStore/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "123456abc", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: ragflux-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: 8023time
+      RABBITMQ_DEFAULT_PASS: 123456abc
+    volumes:
+      - ./dockerStore/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+# 启动命令: docker-compose up -d

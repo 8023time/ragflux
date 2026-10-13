@@ -1,0 +1,59 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@libs/auth": ["./libs/auth/src/index.ts"],
+      "@libs/auth/*": ["./libs/auth/src/*"],
+      "@libs/common": ["./libs/common/src/index.ts"],
+      "@libs/common/*": ["./libs/common/src/*"],
+      "@libs/config": ["./libs/config/src/index.ts"],
+      "@libs/config/*": ["./libs/config/src/*"],
+      "@libs/database": ["./libs/database/src/index.ts"],
+      "@libs/database/*": ["./libs/database/src/*"],
+      "@libs/llm": ["./libs/llm/src/index.ts"],
+      "@libs/llm/*": ["./libs/llm/src/*"],
+      "@libs/mail": ["./libs/mail/src/index.ts"],
+      "@libs/mail/*": ["./libs/mail/src/*"],
+      "@libs/pipeline": ["./libs/pipeline/src/index.ts"],
+      "@libs/pipeline/*": ["./libs/pipeline/src/*"],
+      "@libs/queue": ["./libs/queue/src/index.ts"],
+      "@libs/queue/*": ["./libs/queue/src/*"],
+      "@libs/redis": ["./libs/redis/src/index.ts"],
+      "@libs/redis/*": ["./libs/redis/src/*"],
+      "@libs/storage": ["./libs/storage/src/index.ts"],
+      "@libs/storage/*": ["./libs/storage/src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "./libs/auth/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/common/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/config/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/database/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/llm/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/mail/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/pipeline/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/queue/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/redis/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/storage/tsconfig.lib.json"
+    }
+  ]
+}

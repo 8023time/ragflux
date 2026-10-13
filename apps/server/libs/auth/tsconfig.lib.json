@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.lib.json",
+  "compilerOptions": {
+    "declaration": true,
+    "rootDir": "../..",
+    "outDir": "../../dist/libs/auth"
+  },
+  "include": ["src/**/*", "../../apps/api/src/auth/helper"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}

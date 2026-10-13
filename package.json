@@ -1,0 +1,38 @@
+{
+  "name": "ragflux",
+  "version": "1.0.0",
+  "description": "",
+  "priva1te": true,
+  "license": "ISC",
+  "author": "8023time",
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@ragflux/web",
+    "dev:server": "turbo run dev --filter=@ragflux/server",
+    "build": "turbo run build",
+    "build:web": "turbo run build --filter=@ragflux/web",
+    "build:server": "turbo run build --filter=@ragflux/server",
+    "build:config": "turbo run build --filter=@ragflux/config",
+    "build:shared": "turbo run build --filter=@ragflux/shared",
+    "start": "turbo run start",
+    "start:web": "turbo run start --filter=@ragflux/web",
+    "start:server": "turbo run start --filter=@ragflux/server",
+    "docker:up": "docker-compose up -d",
+    "format": "turbo run format",
+    "lint": "turbo run lint",
+    "commit": "cz",
+    "prepare": "husky"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "packageManager": "pnpm@10.25.0",
+  "devDependencies": {
+    "commitizen": "^4.3.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "turbo": "^2.11.4"
+  }
+}
