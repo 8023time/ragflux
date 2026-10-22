@@ -17,8 +17,10 @@
     "start": "turbo run start",
     "start:web": "turbo run start --filter=@ragflux/web",
     "start:server": "turbo run start --filter=@ragflux/server",
-    "docker:up": "docker-compose up -d",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up -d",
+    "docker:prod": "docker compose -f docker-compose.prod.yml up -d --build",
     "format": "turbo run format",
+    "format:check": "turbo run format:check",
     "lint": "turbo run lint",
     "commit": "cz",
     "prepare": "husky"

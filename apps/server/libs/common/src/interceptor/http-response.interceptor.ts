@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import type { Response } from 'express';
-import type { HttpResponse } from '../response/response.service.ts';
+import type { ApiResponse } from '@ragflux/shared/common';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,7 @@ export class HttpResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const response = context.switchToHttp().getResponse<Response>();
     return next.handle().pipe(
-      map((data: HttpResponse<unknown> | undefined) => {
+      map((data: ApiResponse<unknown> | undefined) => {
         // 问答接口已经把响应写成 SSE，这里不能再包一层 JSON。
         if (response.headersSent || !isHttpResponse(data)) {
           return data;
@@ -24,7 +24,7 @@ export class HttpResponseInterceptor implements NestInterceptor {
   }
 }
 
-function isHttpResponse(data: unknown): data is HttpResponse<unknown> {
+function isHttpResponse(data: unknown): data is ApiResponse<unknown> {
   return data != null && typeof data === 'object' && 'code' in data && 'msg' in data;
 }
 

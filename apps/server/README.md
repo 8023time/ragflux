@@ -31,9 +31,10 @@ API 启动时注册 `@libs/common` 的响应拦截器与异常过滤器，并按
 
 ## 开发
 
-在仓库根目录：
+数据库、Redis 和 RabbitMQ 用开发 compose 启动，后端在本机运行。先把 `.env.example` 复制为 `.env`。
 
 ```bash
+pnpm docker:dev
 pnpm dev:server
 ```
 

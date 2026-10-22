@@ -1,39 +1,36 @@
-"use client";
+import { Suspense, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router';
+import { ConfirmModal } from '@/components/common/confirm-modal';
+import { Loading } from '@/components/common/loading';
+import { GithubIcon } from '@/components/common/github-icon';
+import { ToastHost } from '@/components/common/toast-host';
+import { Sidebar } from '@/components/layout/sidebar';
+import { GITHUB_URL } from '@/common/configs/site';
+import { cn } from '@/common/utils/class-name';
+import { logout as logoutRequest } from '@/apis/auth';
+import { useAuth } from '@/common/stores/auth';
+import { useUserInfo } from '@/common/stores/userInfoStore';
+import { useToast } from '@/common/stores/toast';
+import { SettingsModal } from '@/pages/settings/settings-modal';
 
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Sidebar } from "@/components/layout/sidebar";
-import { ConfirmModal } from "@/components/shared/confirm-modal";
-import { GithubIcon } from "@/components/shared/github-icon";
-import { ToastHost } from "@/components/shared/toast-host";
-import { GITHUB_URL } from "@/config/site";
-import { SettingsModal } from "@/features/settings/components/settings-modal";
-import { isWorkbenchRoute } from "@/lib/routes";
-import { useAuth } from "@/stores/auth";
-import { useToast } from "@/stores/toast";
+function PageOutlet() {
+  return (
+    <Suspense fallback={<Loading className="h-full min-h-40 w-full" />}>
+      <Outlet />
+    </Suspense>
+  );
+}
 
-export function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { user, booted, logout } = useAuth();
+export function AppShell() {
+  const navigate = useNavigate();
+  const { booted, setSettingsOpen } = useAuth();
+  const { isLogin, clearUserInfo } = useUserInfo();
   const toast = useToast();
   const [logoutOpen, setLogoutOpen] = useState(false);
-  const unknown = pathname !== "/" && !isWorkbenchRoute(pathname);
-  const atRoot = pathname === "/";
-  const showWorkbench = !unknown && booted && Boolean(user) && pathname !== "/";
-
-  useEffect(() => {
-    if (!booted || !atRoot) return;
-
-    router.replace(user ? "/datasets" : "/login");
-  }, [atRoot, booted, router, user]);
-
-  const shellHeight = showWorkbench || unknown ? "h-screen" : "min-h-screen";
+  const showWorkbench = booted && isLogin;
 
   return (
-    <div
-      className={`relative flex bg-white text-gray-900 dark:bg-gray-950 dark:text-white ${shellHeight}`}
-    >
+    <div className="relative flex h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-white">
       {showWorkbench ? (
         <>
           <a
@@ -46,12 +43,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <GithubIcon className="size-5" />
           </a>
           <Sidebar />
-          <main className="min-w-0 flex-1 overflow-hidden">{children}</main>
         </>
       ) : null}
-      {unknown ? (
-        <div className="flex h-full min-h-0 w-full flex-1">{children}</div>
-      ) : null}
+      <div className={cn('flex h-full min-h-0 min-w-0 flex-1 flex-col', showWorkbench && 'overflow-hidden')}>
+        <PageOutlet />
+      </div>
       <SettingsModal
         onLogout={() => {
           setLogoutOpen(true);
@@ -66,9 +62,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         onCancel={() => setLogoutOpen(false)}
         onConfirm={() => {
           setLogoutOpen(false);
-          void logout().then(() => {
-            toast.success("已退出登录");
-            router.push("/");
+          void logoutRequest().finally(() => {
+            clearUserInfo();
+            setSettingsOpen(false);
+            toast.success('已退出登录');
+            navigate('/login');
           });
         }}
       />

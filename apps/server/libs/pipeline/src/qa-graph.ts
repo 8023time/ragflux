@@ -106,14 +106,7 @@ async function decompose(deps: QaDeps, input: QaInput, planned: { queries: strin
 async function mergeHits(deps: QaDeps, input: QaInput, queries: string[]): Promise<RetrievalHit[]> {
   const merged = new Map<string, RetrievalHit>();
   for (const query of queries) {
-    const hits = await retrieveChunks(
-      deps.vectorStore,
-      deps.llm,
-      input.datasetId,
-      input.endpoint,
-      query,
-      input.topK,
-    );
+    const hits = await retrieveChunks(deps.vectorStore, deps.llm, input.datasetId, input.endpoint, query, input.topK);
     for (const hit of hits) {
       const existing = merged.get(hit.chunkId);
       if (!existing || hit.score > existing.score) {

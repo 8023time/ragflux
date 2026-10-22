@@ -38,6 +38,11 @@
       "types": "./dist/session/index.d.ts",
       "import": "./dist/session/index.mjs",
       "default": "./dist/session/index.mjs"
+    },
+    "./common": {
+      "types": "./dist/common/index.d.ts",
+      "import": "./dist/common/index.mjs",
+      "default": "./dist/common/index.mjs"
     }
   },
   "scripts": {

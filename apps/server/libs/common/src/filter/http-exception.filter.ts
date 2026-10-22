@@ -1,9 +1,8 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common';
 import type { Request, Response } from 'express';
+import type { ApiResponse } from '@ragflux/shared/common';
 
-interface HttpExceptionResponse {
-  code: number;
-  msg: string;
+interface HttpExceptionResponse extends ApiResponse<undefined> {
   details?: unknown;
 }
 

@@ -2,11 +2,7 @@
  * 会话必须同时属于当前用户和指定知识库。不存在或不属于用户时返回 404。
  */
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import type {
-  CitationView,
-  MessageView,
-  SessionView,
-} from '@ragflux/shared/session';
+import type { CitationView, MessageView, SessionView } from '@ragflux/shared/session';
 import { ResponseService } from '@libs/common';
 import { DatasetRepository } from '../dataset/dataset.repository.js';
 import type { CreateSessionDto } from './dto/create-session.dto.js';

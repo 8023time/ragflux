@@ -11,7 +11,6 @@
 | `ResponseModule`          | 全局模块，导出 `ResponseService`                       |
 | `ResponseService`         | 组装成功（`code: 0`）与失败（`code: 1`）响应           |
 | `ResponseCode`            | 业务码：`SUCCESS = 0`、`ERROR = 1`                     |
-| `HttpResponse`            | 响应体类型：`code`、`msg`、`data`                      |
 | `HttpResponseInterceptor` | 透传响应字段，并把 `data` 中的 `bigint` 转成字符串     |
 | `HttpExceptionFilter`     | 捕获 `HttpException`，按 HTTP 状态码返回错误体并写日志 |
 
@@ -72,4 +71,4 @@ create() {
 }
 ```
 
-拦截器假定返回值已经是 `HttpResponse`。它会递归遍历 `data`：`bigint` 转为字符串，避免超过 `Number.MAX_SAFE_INTEGER` 时丢精度；`Date` 保持原样；`data` 缺失时写成 `null`。
+响应体类型使用 `@ragflux/shared/common` 的 `ApiResponse<T>`。拦截器假定返回值已经是这个信封。它会递归遍历 `data`：`bigint` 转为字符串，避免超过 `Number.MAX_SAFE_INTEGER` 时丢精度；`Date` 保持原样；`data` 缺失时写成 `null`。

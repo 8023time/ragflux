@@ -80,7 +80,17 @@
 
 不需要请求体。从 `refreshToken` Cookie 中读取刷新令牌，并校验令牌类型必须为 `refresh`。
 
-成功后签发新的访问令牌和刷新令牌，旧 Cookie 会被覆盖；返回结构与登录接口一致。
+成功后签发新的访问令牌和刷新令牌，旧 Cookie 会被覆盖。响应只包含新的访问令牌，不返回用户信息：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "accessToken": "<access token>"
+  }
+}
+```
 
 失败情况：
 

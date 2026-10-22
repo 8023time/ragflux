@@ -22,9 +22,12 @@ export function setRefreshTokenCookie(res: Response, refreshToken: string, confi
 }
 
 export function clearRefreshTokenCookie(res: Response, config: RefreshTokenCookieConfig) {
-  res.cookie(REFRESH_TOKEN_COOKIE, '', {
-    ...refreshTokenCookieOptions(config),
-    maxAge: 0,
+  const options = refreshTokenCookieOptions(config);
+  res.clearCookie(REFRESH_TOKEN_COOKIE, {
+    httpOnly: options.httpOnly,
+    secure: options.secure,
+    sameSite: options.sameSite,
+    path: options.path,
   });
 }
 

@@ -8,6 +8,7 @@ const entries = [
   "lib/chunk/index.ts",
   "lib/retrieval/index.ts",
   "lib/session/index.ts",
+  "lib/common/index.ts",
 ];
 
 export default defineConfig([

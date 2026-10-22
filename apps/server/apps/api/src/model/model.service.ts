@@ -4,11 +4,7 @@
  * 别人的模型和不存在的模型都是 404。
  */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type {
-  DefaultModels,
-  ModelView,
-  TestModelResult,
-} from '@ragflux/shared/model';
+import type { DefaultModels, ModelView, TestModelResult } from '@ragflux/shared/model';
 import { ResponseService } from '@libs/common';
 import { LlmService } from '@libs/llm';
 import type { CreateEmbedModelDto } from './dto/create-embed-model.dto.js';

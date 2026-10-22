@@ -7,10 +7,7 @@ import type { AppConfig } from '@libs/config';
 import { ResponseService } from '@libs/common';
 import { MailService } from '@libs/mail';
 import { RedisService } from '@libs/redis';
-import type {
-  AuthUser,
-  LoginResponse,
-} from '@ragflux/shared/auth';
+import type { AuthUser, LoginResponse, RefreshResponse } from '@ragflux/shared/auth';
 import { AuthRepository, type UserRow } from './auth.repository.js';
 import type { LoginDto } from './dto/login.dto.js';
 import type { SendCodeDto } from './dto/send-code.dto.js';
@@ -156,7 +153,7 @@ export class AuthService {
    * 用 Cookie 中的刷新令牌换取新的访问令牌，并轮换刷新令牌。
    * @param req HTTP 请求对象
    * @param res HTTP 响应对象
-   * @returns 刷新后的用户和令牌响应
+   * @returns 新的访问令牌。用户信息由 GET /auth/me 单独返回
    */
   async refresh(req: Request, res: Response) {
     const refreshToken = readRefreshToken(req);
@@ -189,12 +186,11 @@ export class AuthService {
       secure: this.configService.get('isProduction', { infer: true }),
       maxAge: REFRESH_MAX_AGE_MS,
     });
-    const data: LoginResponse = {
-      user: toUserView(user),
+    const data: RefreshResponse = {
       accessToken: this.authLibService.generateToken(user.id, 'access'),
     };
     this.logger.log(`刷新令牌成功: userId=${user.id}`);
-    return this.responseService.success<LoginResponse>(data);
+    return this.responseService.success<RefreshResponse>(data);
   }
 
   /** 清掉 HttpOnly 刷新令牌。访问令牌由前端自行丢弃。

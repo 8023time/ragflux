@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "singleQuote": true,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "dist",
+    "migrations",
+    "libs/database/src/prisma/contract.d.ts",
+    "libs/database/src/prisma/contract.json"
+  ]
+}

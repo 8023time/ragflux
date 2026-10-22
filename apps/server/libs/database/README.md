@@ -87,7 +87,7 @@ import { DatabaseModule } from '@libs/database';
 @Module({
   imports: [DatabaseModule],
 })
-export class XXXModule {} 
+export class XXXModule {}
 ```
 
 通过 `client.orm.public.<Model>` 查询：

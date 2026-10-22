@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type {
-  DatasetView,
-} from '@ragflux/shared/dataset';
+import type { DatasetView } from '@ragflux/shared/dataset';
 import { ResponseService } from '@libs/common';
 import { LlmService } from '@libs/llm';
 import type { CreateDatasetDto } from './dto/create-dataset.dto.js';

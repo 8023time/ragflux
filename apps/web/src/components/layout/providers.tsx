@@ -1,10 +1,9 @@
-"use client";
+import type { ReactNode } from 'react';
+import { useAuthBootstrap } from '@/common/hooks/use-auth-bootstrap';
+import { useTheme } from '@/common/hooks/use-theme';
 
-import { useAuthBootstrap } from "@/features/auth/hooks/use-auth-bootstrap";
-import { useThemeSync } from "@/hooks/use-theme-sync";
-
-export function AppProviders({ children }: { children: React.ReactNode }) {
+export function AppProviders({ children }: { children: ReactNode }) {
   useAuthBootstrap();
-  useThemeSync();
+  useTheme();
   return children;
 }

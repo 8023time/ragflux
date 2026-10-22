@@ -6,15 +6,15 @@
 
 ## 能力
 
-| 导出               | 作用                                                                     |
-| ------------------ | ------------------------------------------------------------------------ |
-| `AuthModule`       | 注册 JWT，并导出 `AuthService` 与 `AuthGuard`                            |
-| `AuthService`      | 密码哈希 / 校验，签发与验证 access、refresh 令牌                         |
-| `AuthGuard`        | 校验 `Authorization: Bearer <access token>`，通过后把载荷挂到 `req.user` |
-| `AuthUser`         | 用户信息：`userId`                                                       |
-| `AuthTokenPayload` | 令牌载荷：`userId`、`tokenType`                                          |
-| `TokenType`        | 令牌类型：`access`、`refresh`                                            |
-密码使用 [argon2](https://github.com/ranisalt/node-argon2) 哈希。令牌使用 `@nestjs/jwt`，密钥与有效期来自 `@libs/config`。
+| 导出                                                                                                                       | 作用                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `AuthModule`                                                                                                               | 注册 JWT，并导出 `AuthService` 与 `AuthGuard`                            |
+| `AuthService`                                                                                                              | 密码哈希 / 校验，签发与验证 access、refresh 令牌                         |
+| `AuthGuard`                                                                                                                | 校验 `Authorization: Bearer <access token>`，通过后把载荷挂到 `req.user` |
+| `AuthUser`                                                                                                                 | 用户信息：`userId`                                                       |
+| `AuthTokenPayload`                                                                                                         | 令牌载荷：`userId`、`tokenType`                                          |
+| `TokenType`                                                                                                                | 令牌类型：`access`、`refresh`                                            |
+| 密码使用 [argon2](https://github.com/ranisalt/node-argon2) 哈希。令牌使用 `@nestjs/jwt`，密钥与有效期来自 `@libs/config`。 |
 
 ## 使用
 

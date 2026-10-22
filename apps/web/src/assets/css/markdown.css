@@ -1,0 +1,127 @@
+@layer components {
+  .md-body p {
+    margin: 0.4em 0;
+  }
+
+  .md-body p:first-child {
+    margin-top: 0;
+  }
+
+  .md-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .md-body h1,
+  .md-body h2,
+  .md-body h3,
+  .md-body h4 {
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0.85em 0 0.4em;
+  }
+
+  .md-body ul,
+  .md-body ol {
+    margin: 0.4em 0;
+    padding-left: 1.4rem;
+  }
+
+  .md-body ul {
+    list-style: disc;
+  }
+
+  .md-body ol {
+    list-style: decimal;
+  }
+
+  .md-body blockquote {
+    margin: 0.5em 0;
+    border-left: 3px solid currentColor;
+    padding-left: 0.75rem;
+    opacity: 0.85;
+  }
+
+  .md-body code {
+    border-radius: 0.25rem;
+    background: #f3f4f6;
+    padding: 0.1em 0.35em;
+    font-size: 0.85em;
+  }
+
+  .dark .md-body code {
+    background: #1f2937;
+  }
+
+  .md-body pre {
+    margin: 0.6em 0;
+    overflow-x: auto;
+    border-radius: 0.6rem;
+    background: #111827;
+    padding: 0.75rem 1rem;
+    color: #f9fafb;
+  }
+
+  .md-body pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+  }
+
+  .md-body a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+
+  .dark .md-body a {
+    color: #60a5fa;
+  }
+
+  .md-body table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .md-table-scroll {
+    max-width: 100%;
+    margin: 0.6em 0;
+    overflow-x: auto;
+  }
+
+  .md-body th,
+  .md-body td {
+    border: 1px solid #e5e7eb;
+    padding: 0.4em 0.6em;
+    vertical-align: top;
+  }
+
+  .dark .md-body th,
+  .dark .md-body td {
+    border-color: #374151;
+  }
+
+  .dark .md-body th {
+    background: #1f2937;
+  }
+
+  .md-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  .md-body.is-streaming > :last-child::after,
+  .md-body.is-streaming:empty::after {
+    content: '▍';
+    margin-left: 2px;
+    color: #3b82f6;
+    animation: cursor-blink 1s steps(2) infinite;
+  }
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}

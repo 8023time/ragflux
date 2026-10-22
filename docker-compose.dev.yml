@@ -1,0 +1,74 @@
+# 只启动本机开发要用的外部依赖。后端和前端在宿主机运行：pnpm dev
+# 启动：docker compose -f docker-compose.dev.yml up -d
+# 环境变量来自 apps/server/.env。后端跑在宿主机上，DB_HOST、REDIS_HOST、RABBITMQ_URL 使用 localhost / 127.0.0.1。
+
+services:
+  # 数据库 postgres。镜像只认 POSTGRES_*，启动时从 DB_* 映射
+  postgres:
+    image: pgvector/pgvector:pg18
+    container_name: ragflux-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./apps/server/.env
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export POSTGRES_USER="$$DB_USER"
+        export POSTGRES_PASSWORD="$$DB_PASSWORD"
+        export POSTGRES_DB="$$DB_DATABASE"
+        exec docker-entrypoint.sh postgres
+    volumes:
+      - ./dockerStore/postgres:/var/lib/postgresql
+      - ./dockerStore/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$DB_USER\" -d \"$$DB_DATABASE\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # 缓存 redis
+  redis:
+    image: redis:8
+    container_name: ragflux-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./apps/server/.env
+    command: ["sh", "-c", "exec redis-server --requirepass \"$$REDIS_PASSWORD\" --appendonly yes"]
+    volumes:
+      - ./dockerStore/redis:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # 消息队列 rabbitmq。用户名和密码取自 RABBITMQ_URL
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: ragflux-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - ./apps/server/.env
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        creds="$${RABBITMQ_URL#*://}"
+        creds="$${creds%%@*}"
+        export RABBITMQ_DEFAULT_USER="$${creds%%:*}"
+        export RABBITMQ_DEFAULT_PASS="$${creds#*:}"
+        exec docker-entrypoint.sh rabbitmq-server
+    volumes:
+      - ./dockerStore/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="dns-prefetch" href="https://api.ragflux.8023time.com" />
+    <link rel="preconnect" href="https://api.ragflux.8023time.com" crossorigin="use-credentials" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="让每一份文档，都成为答案的一部分。" />
+    <meta name="apple-mobile-web-app-title" content="ragflux" />
+    <title>ragflux</title>
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('color-mode');
+          if (mode !== 'light' && mode !== 'dark' && mode !== 'system') mode = 'system';
+          var dark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

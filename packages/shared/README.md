@@ -30,7 +30,7 @@ import type { ChatStreamEvent } from "@ragflux/shared/session";
 
 | 子路径 | 主要类型 | 用途 |
 | --- | --- | --- |
-| `@ragflux/shared/auth` | `SendCodeRequest`、`LoginRequest`、`AuthUser`、`LoginResponse` | 验证码登录和用户信息 |
+| `@ragflux/shared/auth` | `SendCodeRequest`、`LoginRequest`、`AuthUser`、`LoginResponse`、`RefreshResponse` | 验证码登录、刷新访问令牌和用户信息 |
 | `@ragflux/shared/model` | `CreateModelRequest`、`UpdateModelRequest`、`ModelView`、`DefaultModels` | 嵌入/视觉模型配置 |
 | `@ragflux/shared/dataset` | `CreateDatasetRequest`、`UpdateDatasetRequest`、`DatasetView` | 知识库创建、配置更新和返回视图 |
 | `@ragflux/shared/document` | `CreateUploadUrlRequest`、`DocumentView`、`DocumentProgress` | 文件上传、文档登记和解析状态 |
