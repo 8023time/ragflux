@@ -1,6 +1,6 @@
 # Config
 
-服务端共享配置库。启动时读取 `apps/server/.env`，用 Zod 校验环境变量，再整理成类型化的 `AppConfig`，通过 Nest `ConfigModule` 全局注入。
+服务端共享配置库。启动时按 `NODE_ENV` 只读取一个文件：`production` 读取 `apps/server/.env.prod`，其他环境读取 `apps/server/.env.dev`。读到的值用 Zod 校验，再整理成类型化的 `AppConfig`，通过 Nest `ConfigModule` 全局注入。
 
 通过 `@libs/config` 引入。变量模板见 `apps/server/.env.example`。
 
@@ -8,7 +8,7 @@
 
 | 导出              | 作用                                                            |
 | ----------------- | --------------------------------------------------------------- |
-| `AppConfigModule` | 全局加载 `.env` 并注册 `loadAppConfig`，开启配置缓存            |
+| `AppConfigModule` | 按 `NODE_ENV` 加载 `.env.dev` 或 `.env.prod`，并注册 `loadAppConfig` |
 | `loadAppConfig`   | 校验 `process.env` 并返回配置对象；校验失败时抛错，应用无法启动 |
 | `AppConfig`       | `loadAppConfig` 的返回类型                                      |
 

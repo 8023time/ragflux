@@ -1,6 +1,6 @@
 # 只启动本机开发要用的外部依赖。后端和前端在宿主机运行：pnpm dev
 # 启动：docker compose -f docker-compose.dev.yml up -d
-# 环境变量来自 apps/server/.env。后端跑在宿主机上，DB_HOST、REDIS_HOST、RABBITMQ_URL 使用 localhost / 127.0.0.1。
+# 环境变量来自 apps/server/.env.dev。后端跑在宿主机上，DB_HOST、REDIS_HOST、RABBITMQ_URL 使用 localhost / 127.0.0.1。
 
 services:
   # 数据库 postgres。镜像只认 POSTGRES_*，启动时从 DB_* 映射
@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.dev
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -37,7 +37,7 @@ services:
     ports:
       - "6379:6379"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.dev
     command: ["sh", "-c", "exec redis-server --requirepass \"$$REDIS_PASSWORD\" --appendonly yes"]
     volumes:
       - ./dockerStore/redis:/data
@@ -56,7 +56,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.dev
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |

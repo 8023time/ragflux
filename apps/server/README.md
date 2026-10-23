@@ -1,6 +1,6 @@
 # Server
 
-Ragflux 后端，是一个 NestJS monorepo。三个进程共用 `libs/` 里的库，库通过 `@libs/<name>` 引入。环境变量模板是 `.env.example`，复制为 `.env` 后启动。
+Ragflux 后端，是一个 NestJS monorepo。三个进程共用 `libs/` 里的库，库通过 `@libs/<name>` 引入。环境变量模板是 `.env.example`。开发复制为 `.env.dev`，生产复制为 `.env.prod`。`NODE_ENV=production` 时只读取 `.env.prod`，其他情况只读取 `.env.dev`。
 
 ## 应用
 
@@ -18,7 +18,7 @@ API 启动时注册 `@libs/common` 的响应拦截器与异常过滤器，并按
 
 | 库         | 引入路径         | 说明                                                               |
 | ---------- | ---------------- | ------------------------------------------------------------------ |
-| `config`   | `@libs/config`   | 读取并校验 `.env`，见 [libs/config](libs/config/README.md)         |
+| `config`   | `@libs/config`   | 读取并校验环境变量，见 [libs/config](libs/config/README.md)       |
 | `common`   | `@libs/common`   | 统一 HTTP 响应，见 [libs/common](libs/common/README.md)            |
 | `auth`     | `@libs/auth`     | 密码哈希与 JWT，见 [libs/auth](libs/auth/README.md)                |
 | `database` | `@libs/database` | PostgreSQL / Prisma 8，见 [libs/database](libs/database/README.md) |
@@ -31,7 +31,7 @@ API 启动时注册 `@libs/common` 的响应拦截器与异常过滤器，并按
 
 ## 开发
 
-数据库、Redis 和 RabbitMQ 用开发 compose 启动，后端在本机运行。先把 `.env.example` 复制为 `.env`。
+数据库、Redis 和 RabbitMQ 用开发 compose 启动，后端在本机运行。先把 `.env.example` 复制为 `.env.dev`。
 
 ```bash
 pnpm docker:dev

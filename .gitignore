@@ -1,5 +1,7 @@
 # environment files
 .env
+.env.dev
+.env.prod
 
 # Node.js dependencies
 node_modules/

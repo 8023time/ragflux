@@ -44,7 +44,7 @@ If you use a framework like Next.js or Vite, the Prisma Next plugin will do this
 
 ## Configuration
 
-[`prisma.config.ts`](prisma.config.ts) tells the CLI where your contract lives and how to connect to your database. It loads environment variables from `.env` automatically:
+[`prisma.config.ts`](prisma.config.ts) tells the CLI where your contract lives and how to connect to your database. It loads `.env.prod` when `NODE_ENV=production`, and `.env.dev` otherwise:
 
 ```typescript
 import 'dotenv/config';
@@ -61,7 +61,7 @@ export default definePrismaConfig({
 });
 ```
 
-Notice the `DATABASE_URL` above? It's defined in your [`.env`](./.env) file:
+Notice the `DATABASE_URL` above? It's defined in your [`.env.dev`](./.env.dev) file:
 
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/mydb"

@@ -11,7 +11,7 @@
 | `DatabaseModule`  | 导出 `DatabaseService`                                       |
 | `DatabaseService` | 暴露 Prisma 客户端 `client`，应用关闭时调用 `client.close()` |
 
-客户端在 `src/prisma/db.ts` 中创建：读取 `.env`，用 `@prisma/orm-postgres` 按已生成的契约连接数据库。
+客户端在 `src/prisma/db.ts` 中创建：`NODE_ENV=production` 时读取 `.env.prod`，否则读取 `.env.dev`，再用 `@prisma/orm-postgres` 按已生成的契约连接数据库。
 
 ## 数据模型
 

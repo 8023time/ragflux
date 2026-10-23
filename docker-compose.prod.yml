@@ -1,6 +1,8 @@
 # 启动：docker compose -f docker-compose.prod.yml up -d --build
-# 环境变量由各服务的 env_file 指定为 apps/server/.env
+# 环境变量来自 apps/server/.env.prod。模板是 apps/server/.env.example。
+# 容器内 NODE_ENV=production，后端进程也只读取 .env.prod。
 # 后端也在 compose 网络里，DB_HOST、REDIS_HOST 写 postgres、redis，RABBITMQ_URL 的主机写 rabbitmq。
+# 公网只经过宿主机的 80/443 反向代理。页面和接口只绑定 127.0.0.1，数据库、Redis、RabbitMQ 不映射宿主机端口。
 
 services:
   # 数据库 postgres。镜像只认 POSTGRES_*，启动时从 DB_* 映射
@@ -8,10 +10,8 @@ services:
     image: pgvector/pgvector:pg18
     container_name: ragflux-postgres
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.prod
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -34,10 +34,8 @@ services:
     image: redis:8
     container_name: ragflux-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.prod
     command: ["sh", "-c", "exec redis-server --requirepass \"$$REDIS_PASSWORD\" --appendonly yes"]
     volumes:
       - ./dockerStore/redis:/data
@@ -52,11 +50,8 @@ services:
     image: rabbitmq:4-management
     container_name: ragflux-rabbitmq
     restart: unless-stopped
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.prod
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -81,7 +76,7 @@ services:
     container_name: ragflux-web
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       - server
 
@@ -93,11 +88,13 @@ services:
     container_name: ragflux-server
     restart: unless-stopped
     ports:
-      - "3001:3001"
-      - "3002:3002"
-      - "3003:3003"
+      - "127.0.0.1:3001:3001"
+      - "127.0.0.1:3002:3002"
+      - "127.0.0.1:3003:3003"
     env_file:
-      - ./apps/server/.env
+      - ./apps/server/.env.prod
+    volumes:
+      - ./apps/server/.env.prod:/app/apps/server/.env.prod:ro
     depends_on:
       postgres:
         condition: service_healthy

@@ -7,7 +7,7 @@ import { loadAppConfig } from './config.loader.js';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev',
       load: [loadAppConfig],
     }),
   ],
